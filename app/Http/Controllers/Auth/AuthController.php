@@ -53,12 +53,6 @@ class AuthController extends Controller
        return redirect()->route('login')->with('message', 'Registration was successful, Please check your email for account verification');
     }
 
-
-
-
-
-
-
     public function loginView(){
         return view('auth.login');
     }
@@ -102,5 +96,8 @@ class AuthController extends Controller
         return redirect()->route('login')->with('message', $message);
     }
 
+
+
+    
 
 }

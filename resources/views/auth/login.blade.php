@@ -72,7 +72,7 @@
         </form>
         <div class="col-12 mt-4">
             <p class="mb-1">
-                <a href="forgot-password.html" style="color: teal">I forgot my password</a>
+                <a href="{{ route('forget.password.get') }}" style="color: teal">I forgot my password</a>
             </p>
             <p class="mb-0">
                 <a href="{{ route('register.view') }}" class="text-center">Register a new membership</a>
