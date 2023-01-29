@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserVerify;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use App\Models\UserVerify;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AuthController extends Controller
 {
@@ -66,9 +67,16 @@ class AuthController extends Controller
         $request->merge([
             $loginType => $request->login
         ]);
-        if(!Auth::attempt($request->only($loginType, 'password'), $request->remember)){
+        //check for login attempts
+        if(RateLimiter::tooManyAttempts(request()->ip(), 3)){
+            return back()->with('status', 'Too many failed attempts, IP has been restricted!');
+        }
+        if(!Auth::guard('web')->attempt($request->only($loginType, 'password'), $request->remember, true)){
+            // block ip for 1min
+            RateLimiter::hit(request()->ip(), 60);
             return back()->with('status', 'Invalid Credentials');
         }
+        RateLimiter::clear(request()->ip());
         $notification = [
             'message'       => 'Login Successful',
             'alert-type'    => 'success'
