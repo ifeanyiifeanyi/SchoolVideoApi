@@ -5,8 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
-class IsVerifyEmail
+class CheckSingleSession
 {
     /**
      * Handle an incoming request.
@@ -16,12 +17,17 @@ class IsVerifyEmail
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
-        if (!Auth::user()->is_email_verified) {
-            Auth::logout();
-            return redirect()->route('login')->with('message', 'You need to verify your account. We have sent you a verification link, please check your mail');
+    {$previous_session = Auth::guard('web')->user()->session_id;
+
+        if ($previous_session !== Session::getId()) {
+            Session::getHandler()->destroy($previous_session);
+            $request->session()->regenerate();
+
+            Auth::guard('web')->user()->session_id = Session::getId();
+            Auth::guard('web')->user()->save();
+            
         }
-       
+
         return $next($request);
     }
 }

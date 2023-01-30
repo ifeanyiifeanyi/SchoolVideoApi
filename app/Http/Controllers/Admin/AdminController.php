@@ -22,7 +22,7 @@ class AdminController extends Controller
 
     public function logout(){
         Session::flush();
-        Auth::logout();
+        Auth::guard('web')->logout();
 
         return redirect()->route('login');
     }

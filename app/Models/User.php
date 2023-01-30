@@ -24,6 +24,7 @@ class User extends Authenticatable
         'status',
         'email',
         'password',
+        'session_id',
         'is_email_verified',
     ];
 

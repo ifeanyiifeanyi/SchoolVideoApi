@@ -46,7 +46,7 @@ Route::group(['middleware' => ['guest']], function () {
     Route::post('/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 });
 
-Route::group(['middleware' => ['is_verify_email']], function(){
+Route::group(['middleware' => ['check_session', 'is_verify_email']], function(){
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::post('/logout' , [AdminController::class, 'logout'])->name('logout');
 });
