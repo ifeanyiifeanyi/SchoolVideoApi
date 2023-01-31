@@ -17,16 +17,17 @@
   <!-- Toastr -->
   <link rel="stylesheet" href="{{ asset('admin/plugins/toastr/toastr.min.css') }}">
   <!-- SweetAlert2 -->
+  @yield('css')
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
   <!-- Navbar -->
-    @include('layouts.adminNavbar')
+    @include('admin.layouts.adminNavbar')
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  @include('layouts.adminSidebar')
+  @include('admin.layouts.adminSidebar')
 
   <!-- Content Wrapper. Contains page content -->
         @yield('adminContent')
@@ -35,7 +36,7 @@
 
 
   <!-- Main Footer -->
-  @include('layouts.adminFooter')
+  @include('admin.layouts.adminFooter')
 </div>
 <!-- ./wrapper -->
 
@@ -73,6 +74,7 @@
 
   @endif
   </script>
+  @yield('js')
 
 </body>
 </html>

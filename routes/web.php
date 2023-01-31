@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
@@ -46,7 +47,12 @@ Route::group(['middleware' => ['guest']], function () {
     Route::post('/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 });
 
-Route::group(['middleware' => ['check_session', 'is_verify_email']], function(){
+Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], function(){
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::post('/logout' , [AdminController::class, 'logout'])->name('logout');
+
+    //categories routes
+    Route::controller(CategoriesController::class)->group(function(){
+        Route::get('/category', 'index')->name('categories');
+    });
 });
