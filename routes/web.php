@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoriesController;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ActivationCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,5 +59,10 @@ Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], fun
         Route::get('/category/{id}', 'edit')->name('categories.edit');
         Route::post('/category/{id}', 'update')->name('categories.update');
         Route::delete('/category/{id}', 'destroy')->name('categories.delete');
+    });
+
+    //activation codes routes
+    Route::controller(ActivationCodeController::class)->group(function(){
+        Route::get('/activation-code', 'index')->name('activation');
     });
 });

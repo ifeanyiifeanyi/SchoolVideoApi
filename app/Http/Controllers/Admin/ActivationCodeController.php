@@ -14,7 +14,7 @@ class ActivationCodeController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.codes.index');
     }
 
     /**
