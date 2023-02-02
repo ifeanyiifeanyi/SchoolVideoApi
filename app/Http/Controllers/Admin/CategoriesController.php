@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
@@ -14,18 +15,10 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return view('admin.Category.index');
+        $category = Categories::latest()->get();
+        return view('admin.Category.index', ['category_create' => true, 'categories' => $category]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,18 +28,20 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $this->validate($request,[
+            'category' => 'required|string|unique:categories',
+            'description' => 'required|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $category = new Categories();
+        $category->category = $request->category;
+        $category->description = $request->description;
+        $category->save();
+        $notification = [
+            'message'   => 'Category Created!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('categories')->with($notification);
     }
 
     /**
@@ -57,7 +52,8 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Categories::findOrFail($id);
+        return view('admin.Category.index', ['category' => $category, 'category_create' => false]);
     }
 
     /**
@@ -69,7 +65,16 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = Categories::findOrFail($id);
+        $category->category = $request->category;
+        $category->description = $request->description;
+        $category->save();
+        $notification = [
+            'message'   => 'Category Updated!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('categories')->with($notification);
+        
     }
 
     /**
@@ -80,6 +85,11 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Categories::findOrFail($id)->delete();
+        $notification = [
+            'message'   => 'Category deleted!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('categories')->with($notification);
     }
 }

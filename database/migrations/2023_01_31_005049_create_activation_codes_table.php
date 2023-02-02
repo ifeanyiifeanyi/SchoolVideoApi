@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('activation_codes', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
     }

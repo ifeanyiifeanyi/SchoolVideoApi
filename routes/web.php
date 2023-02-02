@@ -54,5 +54,9 @@ Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], fun
     //categories routes
     Route::controller(CategoriesController::class)->group(function(){
         Route::get('/category', 'index')->name('categories');
+        Route::post('/category', 'store')->name('categories.store');
+        Route::get('/category/{id}', 'edit')->name('categories.edit');
+        Route::post('/category/{id}', 'update')->name('categories.update');
+        Route::delete('/category/{id}', 'destroy')->name('categories.delete');
     });
 });
