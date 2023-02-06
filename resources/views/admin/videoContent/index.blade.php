@@ -31,7 +31,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"><a href="{{ route('activation.create') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Create new</a></h3>
+                        <h3 class="card-title"><a href="{{ route('video.create') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Create new</a></h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">

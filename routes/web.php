@@ -73,5 +73,6 @@ Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], fun
     Route::controller(VideoContentController::class)->group(function(){
         Route::get('/video-content', 'index')->name('video');
         Route::get('/video-content/create', 'create')->name('video.create');
+        Route::post('/video-content', 'store')->name('video.store');
     });
 });
