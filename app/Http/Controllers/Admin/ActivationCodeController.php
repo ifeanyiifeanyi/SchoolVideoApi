@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivationCode;
 use Illuminate\Http\Request;
 
 class ActivationCodeController extends Controller
@@ -14,7 +15,8 @@ class ActivationCodeController extends Controller
      */
     public function index()
     {
-        return view('admin.codes.index');
+        $codes = ActivationCode::latest()->get();
+        return view('admin.codes.index', ['codes' => $codes]);
     }
 
     /**
@@ -24,7 +26,7 @@ class ActivationCodeController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.codes.create');
     }
 
     /**
@@ -35,42 +37,23 @@ class ActivationCodeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'code' => 'required|unique:activation_codes|min:10|max:10',
+        ]);
+        $code = new ActivationCode();
+        $code->code = $request->input('code');
+        $code->status = 0;
+        $code->save();
+        $notification = [
+            'message'   => 'New Activation Created!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('activation')->with($notification);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+    
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -80,6 +63,11 @@ class ActivationCodeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        ActivationCode::findOrFail($id)->delete();
+        $notification = [
+            'message'   => 'Activation Code Deleted!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->route('activation')->with($notification);
     }
 }

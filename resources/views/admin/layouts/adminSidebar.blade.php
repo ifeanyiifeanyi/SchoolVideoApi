@@ -35,7 +35,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item menu-open">
-            <a href="#" class="nav-link">
+            <a href="{{ route('video') }}" class="nav-link {{ (request()->is('video-content')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-sliders-h"></i>
               <p>
                Videos
@@ -44,13 +44,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('video') }}" class="nav-link {{ (request()->is('video-content')) ? 'active' : '' }}">
                   <i class="fas fa-video nav-icon"></i>
                   <p>All Videos</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('video.create') }}" class="nav-link {{ (request()->is('video-content/create')) ? 'active' : '' }}">
                   <i class="fas fa-plus nav-icon"></i>
                   <p>Create Video</p>
                 </a>
@@ -58,7 +58,7 @@
             </ul>
           </li>
           <li class="nav-item menu-open">
-            <a href="#" class="nav-link">
+            <a href="{{ route('activation') }}" class="nav-link {{ (request()->is('activation')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-cog"></i>
               <p>
                 Activation Codes
@@ -67,7 +67,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('activation') }}" class="nav-link">
+                <a href="{{ route('activation') }}" class="nav-link {{ (request()->is('activation-code')) ? 'active' : '' }}">
                   <i class="fas fa-tty nav-icon"></i>
                   <p>All Codes</p>
                 </a>
@@ -81,7 +81,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="{{ route('categories') }}" class="nav-link">
+            <a href="{{ route('categories') }}" class="nav-link {{ (request()->is('category')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-stream"></i>
               <p>
                 Category

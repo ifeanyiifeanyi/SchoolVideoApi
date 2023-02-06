@@ -4,7 +4,7 @@
 
 @endsection
 
-@section('title', 'All Codes')
+@section('title', 'All Videos')
 @section('adminContent')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -45,34 +45,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            @if($codes->count())
-                            <tbody>
-                                @foreach ($codes as $code)
-                                <tr>
-                                    <td><input type="checkbox" name="ids" id="ids"></td>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $code->code }}</td>
-                                    <td>
-                                        @if($code->status == 1)
-                                            <div class="btn btn-success">Activated</div>
-                                        @else
-                                        <div class="btn btn-secondary">Inactive</div>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <form id="delete" action="{{ route('activation.destroy', $code->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-transparent border-transparent"><i class="fas fa-trash fa-1x text-danger"></i></button>
-                                    </form>
-                                </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                            @else
-                            <h4>Try again later!</h4>
-
-                            @endif
+                           
 
                         </table>
                     </div>

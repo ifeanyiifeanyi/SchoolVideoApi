@@ -1,3 +1,25 @@
 git remote add origin https://github.com/ifeanyiifeanyi/migrationProject.git
 git branch -M main
 git push -u origin main
+
+<html>
+<head>
+  <script>
+    function generatePassword() {
+      var password = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      for (var i = 0; i < 10; i++) {
+        password += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      document.getElementById("passwordInput").value = password;
+    }
+  </script>
+</head>
+<body>
+  <form>
+    <input type="text" id="passwordInput" disabled>
+    <br><br>
+    <input type="button" value="Generate Password" onclick="generatePassword()">
+  </form>
+</body>
+</html>

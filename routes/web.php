@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\ActivationCodeController;
+use App\Http\Controllers\Admin\VideoContentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,5 +65,13 @@ Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], fun
     //activation codes routes
     Route::controller(ActivationCodeController::class)->group(function(){
         Route::get('/activation-code', 'index')->name('activation');
+        Route::get('/activation-code/create','create')->name('activation.create');
+        Route::post('/activation-code/create','store')->name('activation.store');
+        Route::delete('/activation-code/delete/{id}','destroy')->name('activation.destroy');
+    });
+
+    Route::controller(VideoContentController::class)->group(function(){
+        Route::get('/video-content', 'index')->name('video');
+        Route::get('/video-content/create', 'create')->name('video.create');
     });
 });
