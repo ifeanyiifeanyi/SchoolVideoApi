@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Categories;
+use App\Models\VideoContent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\VideoContent;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class VideoContentController extends Controller
@@ -17,8 +18,8 @@ class VideoContentController extends Controller
      */
     public function index()
     {
-        
-        return view('admin.videoContent.index');
+        $videos = VideoContent::latest()->get();
+        return view('admin.videoContent.index', ['videos' => $videos]);
     }
 
     /**
@@ -94,7 +95,8 @@ class VideoContentController extends Controller
      */
     public function show($id)
     {
-        //
+        $video = VideoContent::findOrFail($id);
+        return view('admin.videoContent.show', ['video' => $video]);
     }
 
     /**
@@ -105,7 +107,9 @@ class VideoContentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $video = VideoContent::findOrFail($id);
+        $categories = Categories::all();
+        return view('admin.videoContent.edit', ['video' => $video, 'categories' => $categories]);
     }
 
     /**
@@ -117,7 +121,55 @@ class VideoContentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validation = Validator::make($request->all(), [
+            'title'         => 'required|string|min:2|max:199',
+            'category_id'   => 'required',
+            'duration'      => 'required|string',
+            'description'   => 'required|min:5|max:255',
+            'video'         => 'nullable|file|mimes:mp4,ogx,oga,ogv,ogg,webm|max:100000',
+            'thumbnail'     => 'nullable|image|mimes:jpeg, png, jpg, webp, svg|max:9048'
+        ]);
+        if ($validation->fails()) {
+            return response()->json([
+                'error' => $validation->errors()->messages()
+            ]);
+        }
+        $video_uploads = VideoContent::findOrFail($id);
+        if($request->hasFile('thumbnail')){
+            $old_thumbnail = $video_uploads->thumbnail;
+            if (File::exits($old_thumbnail)) {
+                File::delete($old_thumbnail);
+            }
+            $thumb = $request->file('thumbnail');
+            $extension = $thumb->getClientOriginalExtension();
+            $thumb_file = time(). ".".$extension;
+            $thumb->move('uploads/thumbnails/', $thumb_file);
+            $video_uploads->thumbnail = 'uploads/thumbnails/'.$thumb_file;
+        }
+        if ($request->hasFile('video')) {
+            $old_video = $video_uploads->video;
+            if (File::exits($old_video)) {
+                File::delete($old_video);
+            }
+            $video = $request->file('video');
+            $ext = $video->getClientOriginalExtension();
+            $video_file = time() .".".$ext;
+            $video->move('uploads/videos/', $video_file);
+            $video_uploads->video = 'uploads/videos/'.$video_file;
+        }
+        $video_uploads->title       = $request->title;
+        $video_uploads->category_id = $request->category_id;
+        $video_uploads->views = 0;
+        $video_uploads->likes = 0;
+        $video_uploads->duration = $request->duration;
+        $video_uploads->description = $request->description;
+        $video_uploads->status = $request->status ? 1 : 0;
+        $video_uploads->update();
+
+        return response()->json([
+            'success' => true,
+            'status'  => 200
+        ]);
     }
 
     /**

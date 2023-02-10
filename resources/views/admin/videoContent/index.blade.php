@@ -38,14 +38,33 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" name="ids" id="ids" class="all_ids"></th>
+                                    <th style="width:20px"><input type="checkbox" name="ids" id="ids" class="all_ids"></th>
                                     <th>#</th>
-                                    <th>Code</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th style="width:60px">Thumbnail</th>
+                                    <th style="width:20px">Edit</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
-                           
+                            @if($videos->count())
+                            <tbody>
+                                @foreach ($videos as $video)
+                                <tr>
+                                    <td><input type="checkbox" name="ids" id="ids" class="all_ids"></td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ ucwords($video->title) }} 
+                                        <a href="{{ route('video.show', $video->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a></td>
+                                    <td>{{ ucwords($video->category->category) }}</td>
+                                    <td><img style="width:50px" src="{{ asset($video->thumbnail) }}" alt="thumbnail" class="img-fluid img-thumbnail"></td>
+                                    <td><a href="{{ route('video.edit', $video->id) }}" class="btn btn-info"><i class="fas fa-edit"></i></a></td>
+                                    <td>{{ ucwords($video->title) }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            @else
+                                <p>No Videos</p>
+                            @endif
 
                         </table>
                     </div>

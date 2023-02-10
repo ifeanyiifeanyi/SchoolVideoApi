@@ -74,5 +74,8 @@ Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], fun
         Route::get('/video-content', 'index')->name('video');
         Route::get('/video-content/create', 'create')->name('video.create');
         Route::post('/video-content', 'store')->name('video.store');
+        Route::get('/video-content/show/{id}', 'show')->name('video.show');
+        Route::get('/video-content/edit/{id}', 'edit')->name('video.edit');
+        Route::post('/video-content/update/{id}', 'update')->name('video.update');
     });
 });
