@@ -40,8 +40,8 @@
                     @csrf
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="category">Email address</label>
-                            <input type="text" name="category" class="form-control" id="category" placeholder="Enter email">
+                            <label for="category">Category Name</label>
+                            <input type="text" name="category" class="form-control" id="category" placeholder="Category Name">
                             @error('category')
                             <p class="text-danger small mt-2">{{ $message }}</p>
                             @enderror

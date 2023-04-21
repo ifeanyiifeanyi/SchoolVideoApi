@@ -32,7 +32,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        
+
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form method="post" action="{{ route('video.store') }}" enctype="multipart/form-data" id="storeVideo">
@@ -42,8 +42,7 @@
                                     <div class="col md-6">
                                         <div class="form-group">
                                             <label for="title">Title</label>
-                                            <input type="text" name="title" class="form-control" id="title"
-                                                placeholder="Enter Title" value="{{ old('title') }}">
+                                            <input type="text" name="title" class="form-control" id="title" placeholder="Enter Title" value="{{ old('title') }}">
                                             @error('title')
                                             <div class="container text-danger">{{ $message }}</div>
                                             @enderror
@@ -73,8 +72,7 @@
 
                                 <div class="form-group">
                                     <label for="duration">Duration</label>
-                                    <input type="text" name="duration" class="form-control" id="duration"
-                                        placeholder="Enter Duration">
+                                    <input type="text" name="duration" class="form-control" id="duration" placeholder="Enter Duration">
                                     @error('duration')
                                     <div class="container text-danger">{{ $message }}</div>
                                     @enderror
@@ -83,12 +81,11 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="thumbnail">Thumbnail</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="file" name="thumbnail" class="custom-file-input" id="thumbnail">
-                                                    <label class="custom-file-label" for="thumbnail">Choose file</label>
+                                            <div>
+                                                <div class="">
+                                                    <input type="file" name="thumbnail" class="form-control" id="thumbnail">
                                                 </div>
-                                        </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -99,12 +96,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="video">Video Content</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="file" name="video" class="custom-file-input" id="video">
-                                                    <label class="custom-file-label" for="video">Choose file</label>
-                                                </div>
-                                               
+                                            <div class="">
+                                                <input type="file" name="video" class="form-control" id="video">
                                             </div>
                                         </div>
                                     </div>
@@ -116,7 +109,7 @@
                                     <label for="description">Video Description</label>
                                     <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
                                 </div>
-                               
+
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="status">
                                     <label class="form-check-label text-secondary" for="status">Status (Check to make Video available for view)</label>
@@ -140,58 +133,59 @@
 
 @section('js')
 <script>
-$.ajaxSetup({
-    header:{
-        'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-    }
-});
+    $.ajaxSetup({
+        header: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
-$(function(){
-    $("#storeVideo").submit(function(e){
-        e.preventDefault();
+    $(function() {
+        $("#storeVideo").submit(function(e) {
+            e.preventDefault();
 
-        $.ajax({
-            url:    $(this).attr('action'),
-            method: $(this).attr('method'),
-            data:   new FormData(this),
-            processData:false,
-            dataType: 'json',
-            contentType:false,
-            beforeSend: function () {
-                $('#btn1').html('<i class="fas fa-cog fa-spin"></i> <span class="l">Loading</span>');
-                $('#btn1').attr("disabled", true);
-            },
-            success: function(res){
-                console.log(res);
-                let data = res.error;
-                if (data) {    
-                    $('#btn1').html('Save');
-                    $('#btn1').attr("disabled", false);
-                    $.each(data, function( index, value ) {
-                        toastr.error(value);
-                    });      
-                    return false; 
+            $.ajax({
+                url: $(this).attr('action')
+                , method: $(this).attr('method')
+                , data: new FormData(this)
+                , processData: false
+                , dataType: 'json'
+                , contentType: false
+                , beforeSend: function() {
+                    $('#btn1').html('<i class="fas fa-cog fa-spin"></i> <span class="l">Loading</span>');
+                    $('#btn1').attr("disabled", true);
                 }
-                if (res.success) {
-                    $('#storeVideo').trigger("reset");
-                    $('#btn1').html('Save');
-                    $('#btn1').attr("disabled", false);
-                    Swal.fire(
-                        'Created',
-                        'Content upload was successful',
-                        'success'
-                    );
-                    setTimeout(function () {
+                , success: function(res) {
+                    console.log(res);
+                    let data = res.error;
+                    if (data) {
+                        $('#btn1').html('Save');
+                        $('#btn1').attr("disabled", false);
+                        $.each(data, function(index, value) {
+                            toastr.error(value);
+                        });
+                        return false;
+                    }
+                    if (res.success) {
                         $('#storeVideo').trigger("reset");
                         $('#btn1').html('Save');
                         $('#btn1').attr("disabled", false);
-                        window.location.href="{{ route('video') }}";
-                    }, 3000);
+                        Swal.fire(
+                            'Created'
+                            , 'Content upload was successful'
+                            , 'success'
+                        );
+                        setTimeout(function() {
+                            $('#storeVideo').trigger("reset");
+                            $('#btn1').html('Save');
+                            $('#btn1').attr("disabled", false);
+                            window.location.href = "{{ route('video') }}";
+                        }, 3000);
+                    }
+
                 }
-               
-            },
+            , })
         })
     })
-})
+
 </script>
 @endsection

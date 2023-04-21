@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -19,12 +20,28 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->enum('status', ['0', '1'])->default('0');
+            $table->tinyInteger('status')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('device')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
+           // Create admin account
+           DB::table('users')->insert([
+            'name' => 'Admin',
+            'image' => null,
+            'username' => 'admin',
+            'email' => 'admin@admin.com',
+            'status' => 1,
+            'email_verified_at' => now(),
+            'is_email_verified' => 1,
+            'password' => Hash::make('password'),
+            'device' => null,
+            'remember_token' => null,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 
     /**
