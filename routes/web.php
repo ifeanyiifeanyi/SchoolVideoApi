@@ -69,6 +69,7 @@ Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], fun
         Route::get('/activation-code/create','create')->name('activation.create');
         Route::post('/activation-code/create','store')->name('activation.store');
         Route::delete('/activation-code/delete/{id}','destroy')->name('activation.destroy');
+        Route::get('/activation-active','active')->name('activation.show');
     });
 
     Route::controller(VideoContentController::class)->group(function(){

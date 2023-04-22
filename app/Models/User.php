@@ -38,7 +38,10 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
+    public function activationCode()
+    {
+        return $this->belongsTo(ActivationCode::class, 'activation_code', 'code');
+    }
     /**
      * The attributes that should be cast.
      *

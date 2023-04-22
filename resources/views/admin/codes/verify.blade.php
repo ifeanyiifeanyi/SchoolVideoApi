@@ -38,34 +38,23 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" name="ids" id="ids" class="all_ids"></th>
                                     <th>#</th>
                                     <th>Code</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>Username</th>
+                                    <th>User Email</th>
+                                    <th>Updated At</th>
                                 </tr>
                             </thead>
                             @if($codes->count())
                             <tbody>
                                 @foreach ($codes as $code)
                                 <tr>
-                                    <td><input type="checkbox" name="ids" id="ids"></td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $code->code }}</td>
-                                    <td>
-                                        @if($code->status == 1)
-                                        <div class="btn btn-success">Activated</div>
-                                        @else
-                                        <div class="btn btn-secondary">Inactive</div>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <form id="delete" action="{{ route('activation.destroy', $code->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="bg-transparent border-transparent"><i class="fas fa-trash fa-1x text-danger"></i></button>
-                                        </form>
-                                    </td>
+                                    <td>{{ $code->user->username }} </td>
+                                    <td>{{ $code->user->email }} </td>
+                                    <td>{{ $code->updated_at }} </td>
+                                   
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -85,15 +74,7 @@
 </div>
 @endsection
 @section('js')
-<script>
-    document.querySelector('.all_ids').addEventListener('change', function() {
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(function(checkbox) {
-            checkbox.checked = this.checked;
-        }, this);
-    });
 
-</script>
 
 <script>
     $(function() {
@@ -119,17 +100,10 @@
                             'Deleted!'
                             , 'Content deleted.'
                             , 'success'
-                        );
-                    } else {
-                        Swal.fire(
-                            'Error!'
-                            , 'Failed to delete content.'
-                            , 'error'
-                        );
+                        )
                     }
                 }
-            });
-
+            })
         })
 
     })

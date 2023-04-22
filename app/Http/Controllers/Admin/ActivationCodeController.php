@@ -45,14 +45,18 @@ class ActivationCodeController extends Controller
         $code->status = 0;
         $code->save();
         $notification = [
-            'message'   => 'New Activation Created!',
+            'message' => 'New Activation Created!',
             'alert-type' => 'success'
         ];
         return redirect()->route('activation')->with($notification);
     }
 
-    
 
+    public function active()
+    {
+        $codes = ActivationCode::where('status', 1)->get();
+        return view('admin.codes.verify', compact('codes'));
+    }
 
 
     /**
@@ -63,11 +67,21 @@ class ActivationCodeController extends Controller
      */
     public function destroy($id)
     {
-        ActivationCode::findOrFail($id)->delete();
-        $notification = [
-            'message'   => 'Activation Code Deleted!',
-            'alert-type' => 'success'
-        ];
-        return redirect()->route('activation')->with($notification);
+        $code = ActivationCode::findOrFail($id);
+        if ($code->status == 1) {
+            $notification = [
+                'message' => 'Cannot delete user activated code!',
+                'alert-type' => 'error'
+            ];
+            return redirect()->route('activation')->with($notification);
+        } else {
+            $code->delete();
+            $notification = [
+                'message' => 'Activation Code Deleted!',
+                'alert-type' => 'success'
+            ];
+            return redirect()->route('activation')->with($notification);
+
+        }
     }
 }

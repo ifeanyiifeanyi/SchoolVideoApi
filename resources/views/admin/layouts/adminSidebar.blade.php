@@ -73,7 +73,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('activation.show') }}" class="nav-link">
                   <i class="fas fa-compact-disc nav-icon"></i>
                   <p>Active Codes</p>
                 </a>
