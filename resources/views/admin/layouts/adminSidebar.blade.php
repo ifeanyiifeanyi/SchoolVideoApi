@@ -88,6 +88,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('manage.users') }}" class="nav-link {{ (request()->is('manage.users')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-stream"></i>
+              <p>
+                Users
+              </p>
+            </a>
+          </li>
           <li class="nav-item bg-danger">
             <form action="{{ route('logout') }}" method="POST" class="nav-link">
                 @csrf

@@ -24,79 +24,89 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         $this->validate($request, [
-            'name'      => 'required|string|min:3|max:199',
-            'username'  => 'required|string|min:3|max:199|unique:users',
-            'email'     => 'required|email:rfc,dns|min:3|max:199|unique:users',
-            'password'  => 'required|min:6|max:10|confirmed'
+            'name' => 'required|string|min:3|max:199',
+            'username' => 'required|string|min:3|max:199|unique:users',
+            'email' => 'required|email:rfc,dns|min:3|max:199|unique:users',
+            'password' => 'required|min:6|max:10|confirmed'
         ]);
 
         $user = new User();
 
-        $user->name     = $request->name;
+        $user->name = $request->name;
         $user->username = $request->username;
-        $user->email    = $request->email;
+        $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
 
         $token = Str::random(64);
         UserVerify::create([
             'user_id' => $user->id,
-            'token'   => $token
+            'token' => $token
         ]);
 
-        Mail::send('email.emailVerificationEmail', ['token' => $token], function($message) use($request){
+        Mail::send('email.emailVerificationEmail', ['token' => $token], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject("Email verification");
         });
 
-       return redirect()->route('login')->with('message', 'Registration was successful, Please check your email for account verification');
+        return redirect()->route('login')->with('message', 'Registration was successful, Please check your email for account verification');
     }
 
-    public function loginView(){
+    public function loginView()
+    {
         return view('auth.login');
     }
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         // dd($request->all());
         $this->validate($request, [
-            'login'     => 'required|min:2',
-            'password'  => 'required'
+            'login' => 'required|min:2',
+            'password' => 'required'
         ]);
         $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $request->merge([
             $loginType => $request->login
         ]);
         //check for login attempts
-        if(RateLimiter::tooManyAttempts(request()->ip(), 3)){
+        if (RateLimiter::tooManyAttempts(request()->ip(), 3)) {
             return back()->with('status', 'Too many failed attempts, IP has been restricted!');
         }
-        if(!Auth::guard('web')->attempt($request->only($loginType, 'password'), $request->remember, true)){
+        if (!Auth::guard('web')->attempt($request->only($loginType, 'password'), $request->remember, true)) {
             // block ip for 1min
             RateLimiter::hit(request()->ip(), 60);
             return back()->with('status', 'Invalid Credentials');
         }
         RateLimiter::clear(request()->ip());
-        $notification = [
-            'message'       => 'Login Successful',
-            'alert-type'    => 'success'
-        ];
-        return redirect()->route('dashboard')->with($notification);
+
+        $user = Auth::guard('web')->user();
+        // dd($user->username);
+        if ($user->username === 'Admin' && $user->status === 1) {
+            $notification = ['message' => 'Login Successful', 'alert-type' => 'success'];
+            return redirect()->route('dashboard')->with($notification);
+        } else {
+            Auth::guard('web')->logout();
+            $notification = ['message' => 'Your account is not authorized to access the dashboard.', 'alert-type' => 'error'];
+            return redirect()->route('login')->with($notification);
+        }
     }
 
-    public function verifyAccount($token){
+    public function verifyAccount($token)
+    {
         $verifyUser = UserVerify::where('token', $token)->first();
         $message = "Sorry, your email could not be identified";
 
-        if(!is_null($verifyUser)){
+        if (!is_null($verifyUser)) {
             $user = $verifyUser->user;
 
-            if(!$user->is_email_verified){
+            if (!$user->is_email_verified) {
                 $verifyUser->user->is_email_verified = 1;
                 $verifyUser->user->save();
 
                 $message = "Your email is now verified. You can login";
-            }else {
+            } else {
                 $message = "Your email is already verified, continue to login";
             }
         }
@@ -106,6 +116,6 @@ class AuthController extends Controller
 
 
 
-    
+
 
 }

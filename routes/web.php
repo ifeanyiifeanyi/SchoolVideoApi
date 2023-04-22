@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\ManageUsersController;
+use App\Http\Controllers\Admin\VideoContentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\ActivationCodeController;
-use App\Http\Controllers\Admin\VideoContentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,5 +78,18 @@ Route::group(['middleware' => ['check_session', 'is_verify_email', 'auth']], fun
         Route::get('/video-content/show/{id}', 'show')->name('video.show');
         Route::get('/video-content/edit/{id}', 'edit')->name('video.edit');
         Route::post('/video-content/update/{id}', 'update')->name('video.update');
+    });
+
+    Route::controller(ManageUsersController::class)->group(function(){
+        Route::get('manage-users', 'index')->name('manage.users');
+        Route::get('manage-users/view/{id}', 'show')->name('manage.users.show');
+
+        Route::get('manage-users/verify/{id}', 'verify')->name('manage.users.verify');
+        Route::post('manage-users/verify-update', 'verifyUpdate')->name('manage.users.verifyUpdate');
+
+        Route::get('manage-users/Unverified/{id}', 'Unverified')->name('manage.users.Unverified');
+
+
+        Route::delete('manage-users/delete/{id}', 'destroy')->name('manage.users.delete');
     });
 });
