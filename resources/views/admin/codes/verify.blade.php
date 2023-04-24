@@ -53,7 +53,7 @@
                                     <td>{{ $code->code }}</td>
                                     <td>{{ $code->user->username }} </td>
                                     <td>{{ $code->user->email }} </td>
-                                    <td>{{ $code->updated_at }} </td>
+                                    <td>{{ $code->updated_at->format('M d, Y h:i A')}} </td>
                                    
                                 </tr>
                                 @endforeach
