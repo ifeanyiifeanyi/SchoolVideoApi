@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthApiController;
+use App\Http\Controllers\Api\MediaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::controller(AuthApiController::class)->group(function(){
-
     Route::post('signup', 'signUp');
+    Route::post('login', 'login');
+});
+
+Route::controller(MediaController::class)->group(function(){
+    Route::get('videos', 'all_videos');
 });

@@ -55,18 +55,19 @@ class SignupHelper
     public function register($device)
     {
         $validate = $this->validateInputRegister();
-
+    
         if ($validate['status'] == false) {
             return $validate;
         }
-
+    
         // check if the activation code is available
         $activationCode = ActivationCode::where('code', $this->activation_code)
             ->where('status', 0)->first();
-
+    
         if(!$activationCode) {
             return ['status' => false, 'message' => 'Invalid registration code.'];
         }
+    
         $user = User::create([
             'name' => $this->name,
             'username' => $this->username,
@@ -75,17 +76,24 @@ class SignupHelper
             'device' => $this->device,
             'password' => Hash::make($this->password)
         ]);
-
+    
         if(!$user){
             return ['status' => false, 'message' => 'Registration Failed.'];
         }
+    
         // if user was created update activation Code status to 1
         $activationCode->status = 1;
         $activationCode->save();
         
         $token = $user->createToken($device)->plainTextToken;
+    
+        // check if the user ID is available before returning the data
+        if (!$user->id) {
+            return ['status' => false, 'message' => 'User ID not found.'];
+        }
+    
+        // return user ID along with other data
         return ['status' => true, 'token' => $token, 'user' => $user, 'user_id' => $user->id];
-
-
     }
+    
 }

@@ -45,7 +45,7 @@ class VideoContentController extends Controller
             'title'         => 'required|string|unique:video_contents|min:2|max:199',
             'category_id'   => 'required',
             'duration'      => 'required|string',
-            'description'   => 'required|min:5|max:255',
+            'description'   => 'required|min:5',
             'video'         => 'required|file|mimes:mp4,ogx,oga,ogv,ogg,webm|max:100000',
             'thumbnail'     => 'required|image|mimes:jpeg, png, jpg, webp, svg|max:9048'
         ]);
